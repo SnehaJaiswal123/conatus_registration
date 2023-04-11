@@ -11,6 +11,9 @@ const sendOtp=async(req,res)=>{
    try{
     const email=req.body.email;
     const otp=getRandomNumber(10000);
+    if(otp<1000){
+        otp=otp+1000;
+    }
     const user=await verifyModel.create({email:email,otp:otp});
     const id=user.id;
     var transporter = nodemailer.createTransport({
