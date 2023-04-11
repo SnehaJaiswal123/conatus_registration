@@ -68,6 +68,7 @@ const verifyOtp=async(req,res)=>{
         console.log(e);
     }
 }
+
 router
 .route('/sendotp')
 .post(sendOtp)
