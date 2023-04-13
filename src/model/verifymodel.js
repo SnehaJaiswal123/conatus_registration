@@ -2,7 +2,8 @@ const mongoose=require('../db/mongoose');
 const verifySchema=mongoose.Schema({
     email:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     otp:{
         type:Number

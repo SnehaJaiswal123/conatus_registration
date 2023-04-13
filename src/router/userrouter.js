@@ -14,6 +14,13 @@ const sendOtp=async(req,res)=>{
     if(otp<1000){
         otp=otp+1000;
     }
+    const existinguser=await verifyModel.findOne({email:email})
+    if(existinguser){
+        res.status(409).json({
+            message:"user already registered"
+        })
+        throw new err;
+    }
     const user=await verifyModel.create({email:email,otp:otp});
     const id=user.id;
     var transporter = nodemailer.createTransport({
@@ -49,11 +56,12 @@ const sendOtp=async(req,res)=>{
 
 const verifyOtp=async(req,res)=>{
     try{
-        const id=req.params.id;
-        const user=await verifyModel.findById(id);
+        const { email , otp } = req.body;
+
+        const user=await verifyModel.findOne({email:email});
         if(user){
-            const otp=user.otp;
-            if(req.body.otp==otp){
+            const userOtp=user.otp;
+            if(otp==userOtp){
                 console.log("user verified");
                 res.status(200).json({
                     message:"user verified"
@@ -77,7 +85,7 @@ router
 .post(sendOtp)
 
 router
-.route('/verifyotp/:id')
+.route('/verifyotp')
 .post(verifyOtp)
 
 module.exports=router;
